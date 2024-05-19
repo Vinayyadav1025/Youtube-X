@@ -4,7 +4,8 @@ class ApiError extends Error{
         message = 'SomeThing went wrong',
         error = [],
         stack =""
-    ){
+    )
+    {
         super(message)
         this.statusCode = statusCode
         this.data = null
