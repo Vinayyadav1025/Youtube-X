@@ -2,7 +2,7 @@ import {asyncHandler} from '../utils/asyncHandler.js';
 import {ApiError} from "../utils/ApiError.js";
 import {User} from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import { ApiResponse } from '../utils/ApiResponse.js';
+import { ApiResponse} from "../utils/ApiResponse.js";
 
 const registerUser = asyncHandler( async (req,res) => {
     // Get user detail from frontend
@@ -16,7 +16,7 @@ const registerUser = asyncHandler( async (req,res) => {
     // return response
 
     const {username, email, fullName, password} = req.body;
-    console.log(username,email);
+    //console.log(username,email);
 
     //Beginers way to check validation in many filds using if else if else etc.
     // if (fullName == "") {
@@ -32,8 +32,8 @@ const registerUser = asyncHandler( async (req,res) => {
     ) {
         throw new ApiError(400, "App fields are required")
     }
-    //Valide with database with many fields
-    const existedUser = User.findOn({
+    //Validate with database with many fields
+    const existedUser = await User.findOne({
         $or: [{ username }, { email }]
     })
 
@@ -45,7 +45,13 @@ const registerUser = asyncHandler( async (req,res) => {
     //Take file address from multer middleware 
     // ? this represent optional
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+    let coverImageLocalPath;
+    if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
+        coverImageLocalPath = req.files.coverImage[0].path;
+    }
+
     // Validate avater is uploaded or not
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is required");
@@ -53,7 +59,7 @@ const registerUser = asyncHandler( async (req,res) => {
 
     // Avatar and image upload on cloudinary
     const avatar = await uploadOnCloudinary(avatarLocalPath);
-    const coverImage = await auploadOnCloudinary(coverImageLocalPath);
+    const coverImage = await uploadOnCloudinary(coverImageLocalPath);
 
 
     //Check avater is moved on cloudinary or not
@@ -80,7 +86,9 @@ const registerUser = asyncHandler( async (req,res) => {
         throw new ApiError(500, "Someting went wrong registring a user");
     }
 
-    return res.status(201).json(ApiResponse(200, createdUser, "user registered successfully"));
+    return res.status(201).json(
+        new ApiResponse(200, createdUser, "User registered successfully")
+    );
 
 })
 
