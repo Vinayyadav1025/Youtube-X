@@ -29,7 +29,7 @@ const userSchema = new Schema(
             type : String,//cloudenery url for store images, videos etc
             required: true,
         },
-        coverimage: {
+        coverImage: {
             type: String,
         },
         watchHistory: [
