@@ -7,14 +7,14 @@ import { ApiResponse} from "../utils/ApiResponse.js";
 const generateAccessAndRefreshToken = async (userId) => {
     try {
         const user = await User.findById(userId);
-        const accessToken = user.generateAccessToken()
-        const refreshToken = user.generateRefreshToken()
-
+        const accessToken = user.generateAccessToken();
+        const refreshToken = user.generateRefreshToken();
         user.refreshToken = refreshToken// Add refresh token in user object
         await user.save({ validateBeforeSave: false })// save refreshtoken in DB but it internally validate using password then using validateBeforeSave is responsible to save without validate
 
         return {accessToken, refreshToken}
     } catch (error) {
+        console.log(error);
         throw new ApiError(500, "Something went wrong while generaion refresh and access token")
     }
 }
@@ -137,14 +137,14 @@ const loginUser = asyncHandler(async (req,res) => {
         throw new ApiError(401, "Invalid user credentials");
     }
     //generate access token and refresh token 
-    const {accessToken, refreshToken} = await generateAccessAndRefreshToken(user_id);
+    const {accessToken, refreshToken} = await generateAccessAndRefreshToken(user._id);
 
     const loggedInUser = await User.findById(user._id).select(
         "-password -refreshToken"
     )
 
     const options = {
-        httpOnly: true,// mdifiable by only server
+        httpOnly: true,// modifiable by only server
         secure: true
     }
 
