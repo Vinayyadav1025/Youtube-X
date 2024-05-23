@@ -1,4 +1,4 @@
-# Youtube-Tweet
+# Youtube-Tweeter
 
 ### This is modeling of Mongoose database on [stackblitz](https://stackblitz.com/)
 
