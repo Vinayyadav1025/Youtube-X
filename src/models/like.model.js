@@ -17,4 +17,4 @@ const likeSchema = new Schema({
 
 }, { timestamps: true })
 
-export const Like = moggoose.modek("Like",likeSchemak )
+export const Like = moggoose.modek("Like",likeSchema ) 
