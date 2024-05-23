@@ -4,7 +4,7 @@ import {User} from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse} from "../utils/ApiResponse.js";
 import jwt from 'jsonwebtoken';
-import { PropTypes } from 'prop-types';
+import mongoose from 'mongoose';
 
 
 const generateAccessAndRefreshToken = async (userId) => {
@@ -70,7 +70,6 @@ const registerUser = asyncHandler( async (req,res) => {
     if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
         coverImageLocalPath = req.files.coverImage[0].path;
     }
-
     // Validate avater is uploaded or not
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is required");
@@ -80,7 +79,7 @@ const registerUser = asyncHandler( async (req,res) => {
     const avatar = await uploadOnCloudinary(avatarLocalPath);
     const coverImage = await uploadOnCloudinary(coverImageLocalPath);
 
-
+    
     //Check avater is moved on cloudinary or not
     if(!avatar){
         throw new ApiError(400, "Avatar file is not uploded");
@@ -173,8 +172,8 @@ const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
         req.user._id,
         {
-            $set: {
-                refreshToken: undefined
+            $unset: {
+                refreshToken: 1
             }
         },
         {
@@ -222,16 +221,16 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             secure: true
         }
     
-        const { accessToken, newRefreshToken }= await generateAccessAndRefreshToken(user._id);
+        const { accessToken, refreshToken }= await generateAccessAndRefreshToken(user._id);
     
         return res
         .status(200)
         .cookie("accessToken" , accessToken, options)
-        .cookie("refreshToken", newRefreshToken, options)
+        .cookie("refreshToken", refreshToken, options)
         .json(
             new ApiResponse(
                 200,
-                {accessToken, refreshToken: newRefreshToken},
+                {accessToken, refreshToken: refreshToken},
                 "Access token refreshed"
             )
         )
@@ -299,7 +298,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Error whhile uploading on avatar");
     }
 
-    const user = await User.findByIdandUpdate(req.user?._id, 
+    const user = await User.findByIdAndUpdate(req.user?._id, 
         {
             $set: {
                 avatar : avatar.url
@@ -448,7 +447,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
                         }
                     },
                     {
-                        $addField: {
+                        $addFields: {
                             owner: {
                                 $first: "$owner"
                             }
@@ -464,6 +463,11 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200,user[0].watchHistory,"Watch History fetched successfully"))
 })
+
+
+
+
+
 
 
 
