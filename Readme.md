@@ -28,8 +28,8 @@ Before you begin, ensure you have the following installed on your machine:
 1. **Clone the repository**
 
     ```bash
-    git clone https://github.com/Vinayyadav1025/youtube-tweet.git
-    cd youtube-tweet
+    git clone https://github.com/Vinayyadav1025/Youtube-X
+    cd youtube-X
     ```
 
 2. **Install dependencies**
