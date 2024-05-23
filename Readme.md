@@ -1,4 +1,4 @@
-# Youtube-Tweeter
+# Youtube-X
 
 ### This is modeling of Mongoose database on [stackblitz](https://stackblitz.com/)
 
