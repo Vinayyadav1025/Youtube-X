@@ -12,9 +12,13 @@ const likeSchema = new Schema({
     },
     tweet: {
         ref: "type:String.Types.Objectid",
-        ref: "Video"
-    }
+        ref: "Tweet"
+    },
+    likedBy: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    },
 
 }, { timestamps: true })
 
-export const Like = moggoose.modek("Like",likeSchema ) 
+export const Like = mongoose.modek("Like",likeSchema ) 
