@@ -116,5 +116,3 @@ For any queries, please reach out to me on:
 
 - [Twitter](https://x.com/VinayYadav65887?t=s2SHwOPnfnmsa9wCsEUy3w&s=09)
 - [LinkedIn](https://www.linkedin.com/in/vinay-yadav-6782a7186/)
-
-# Special Thanks to [@hiteshchoudhary](https://github.com/hiteshchoudhary) and [@chaiaurcode](https://twitter.com/chaiaurcode)
